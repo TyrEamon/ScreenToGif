@@ -42,20 +42,26 @@ jobs:
           $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
           $visualStudio = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
           $vcvars = Join-Path $visualStudio "VC\Auxiliary\Build\vcvars64.bat"
+          $source = Join-Path $PWD "QuickRegionLauncher"
           $output = Join-Path $PWD "artifacts\ScreenToGif-win-x64\ScreenToGif-QuickRegion.exe"
+          $buildScript = Join-Path $env:RUNNER_TEMP "build-quick-region.cmd"
 
-          Push-Location QuickRegionLauncher
-          try {
-            $command = "call `"$vcvars`" && rc.exe /nologo QuickRegion.rc && cl.exe /nologo /O2 /EHsc /DUNICODE /D_UNICODE QuickRegion.cpp QuickRegion.res shell32.lib /link /SUBSYSTEM:WINDOWS /OUT:`"$output`""
-            cmd.exe /d /s /c $command
+          @"
+          @call "$vcvars"
+          @if errorlevel 1 exit /b %errorlevel%
+          @cd /d "$source"
+          @rc.exe /nologo QuickRegion.rc
+          @if errorlevel 1 exit /b %errorlevel%
+          @cl.exe /nologo /O2 /EHsc /DUNICODE /D_UNICODE QuickRegion.cpp QuickRegion.res shell32.lib /link /SUBSYSTEM:WINDOWS /OUT:"$output"
+          "@ | Set-Content -LiteralPath $buildScript -Encoding ascii
 
-            if ($LASTEXITCODE -ne 0) {
-              throw "Quick region launcher build failed with exit code $LASTEXITCODE."
-            }
+          & $buildScript
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "Quick region launcher build failed with exit code $LASTEXITCODE."
           }
-          finally {
-            Pop-Location
-          }
+
+          Get-Item -LiteralPath $output
 
       - name: Upload Windows package
         uses: actions/upload-artifact@v7
