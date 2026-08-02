@@ -150,6 +150,8 @@
     <s:String x:Key="S.StartUp.Title">ScreenToGif - 启动</s:String>
     <s:String x:Key="S.StartUp.Recorder">录像机</s:String>
     <s:String x:Key="S.StartUp.Recorder.Tooltip">打开屏幕录像机，您可以在其中轻松开始录制屏幕。</s:String>
+    <s:String x:Key="S.StartUp.RegionRecorder">即拉即用</s:String>
+    <s:String x:Key="S.StartUp.RegionRecorder.Tooltip">每次打开前都重新框选录制区域。</s:String>
     <s:String x:Key="S.StartUp.Webcam">摄像头</s:String>
     <s:String x:Key="S.StartUp.Webcam.Tooltip">打开摄像头录像机。</s:String>
     <s:String x:Key="S.StartUp.Board">画板</s:String>

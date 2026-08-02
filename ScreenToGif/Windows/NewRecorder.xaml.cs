@@ -43,6 +43,8 @@ public partial class NewRecorder
     /// </summary>
     private readonly ScreenRecorderViewModel _viewModel;
 
+    private readonly bool _selectRegionOnLoad;
+
     /// <summary>
     /// Keyboard and mouse hooks helper.
     /// </summary>
@@ -131,9 +133,11 @@ public partial class NewRecorder
     #endregion
 
 
-    public NewRecorder()
+    public NewRecorder(bool selectRegionOnLoad = false)
     {
         InitializeComponent();
+
+        _selectRegionOnLoad = selectRegionOnLoad;
 
         _preStartTimer.Tick += PreStart_Elapsed;
         _preStartTimer.Interval = 1000;
@@ -195,6 +199,9 @@ public partial class NewRecorder
         _viewModel.Monitors = MonitorHelper.AllMonitorsGranular();
 
         await UpdatePositioning(true);
+
+        if (_selectRegionOnLoad)
+            await PickRegion(ModeType.Region);
 
         if (UserSettings.All.CursorFollowing)
             Follow();
@@ -854,7 +861,7 @@ public partial class NewRecorder
             #region Previously selected region
 
             //If a region was previously selected.
-            if (!UserSettings.All.SelectedRegion.IsEmpty)
+            if (!_selectRegionOnLoad && !UserSettings.All.SelectedRegion.IsEmpty)
             {
                 //Check if the previous selection can be positioned inside a screen.
                 var monitor = _viewModel.Monitors.FirstOrDefault(f => f.NativeBounds.Contains(UserSettings.All.SelectedRegion.Scale(UserSettings.All.SelectedRegionScale)));

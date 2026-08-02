@@ -180,6 +180,8 @@
     <s:String x:Key="S.StartUp.Title">ScreenToGif - StartUp</s:String>
     <s:String x:Key="S.StartUp.Recorder">Recorder</s:String>
     <s:String x:Key="S.StartUp.Recorder.Tooltip">Opens the screen recorder,&#10;where you can easily start recording your screen.</s:String>
+    <s:String x:Key="S.StartUp.RegionRecorder">Quick recorder</s:String>
+    <s:String x:Key="S.StartUp.RegionRecorder.Tooltip">Selects a new recording region every time before opening the recorder.</s:String>
     <s:String x:Key="S.StartUp.Webcam">Webcam</s:String>
     <s:String x:Key="S.StartUp.Webcam.Tooltip">Opens the webcam recorder.</s:String>
     <s:String x:Key="S.StartUp.Board">Board</s:String>
