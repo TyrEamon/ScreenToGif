@@ -79,12 +79,15 @@ public static class Arguments
     /// </summary>
     public static bool StartCapture { get; set; }
 
+    public static bool QuickRegion { get; set; }
+
     #endregion
 
 
     public static void Prepare(string[] args)
     {
         FileNames.Clear();
+        QuickRegion = false;
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -160,6 +163,15 @@ public static class Arguments
                 case "-new":
                 {
                     NewInstance = true;
+                    break;
+                }
+
+                case "-quick-region":
+                case "/quick-region":
+                case "-quickregion":
+                case "/quickregion":
+                {
+                    QuickRegion = true;
                     break;
                 }
 

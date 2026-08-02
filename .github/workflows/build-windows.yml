@@ -32,6 +32,9 @@ jobs:
       - name: Publish Windows package
         run: dotnet publish ScreenToGif/ScreenToGif.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore --output artifacts/ScreenToGif-win-x64 -p:Platform=x64 -p:DebugSymbols=false -p:DebugType=None
 
+      - name: Add quick region launcher
+        run: Copy-Item artifacts/ScreenToGif-win-x64/ScreenToGif.exe artifacts/ScreenToGif-win-x64/ScreenToGif-QuickRegion.exe
+
       - name: Upload Windows package
         uses: actions/upload-artifact@v7
         with:

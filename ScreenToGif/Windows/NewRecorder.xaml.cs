@@ -546,6 +546,11 @@ public partial class NewRecorder
         await PickRegion(ModeType.Region);
     }
 
+    private async void QuickRegionButton_Click(object sender, RoutedEventArgs e)
+    {
+        await PickRegion(ModeType.Region, ignorePreviousSelection: true);
+    }
+
     private async void WindowButton_Click(object sender, RoutedEventArgs e)
     {
         await PickRegion(ModeType.Window);
@@ -1446,14 +1451,15 @@ public partial class NewRecorder
         Capture.Start(GetCaptureInterval(), (int)CaptureRegion.X, (int)CaptureRegion.Y, (int)CaptureRegion.Width, (int)CaptureRegion.Height, _regionSelection.Scale, Project);
     }
 
-    private async Task PickRegion(ModeType mode, bool quickSelection = false)
+    private async Task PickRegion(ModeType mode, bool quickSelection = false, bool ignorePreviousSelection = false)
     {
         _regionSelection.Hide();
         Hide();
 
         var previousMode = UserSettings.All.RecorderModeIndex;
+        var previousRegion = ignorePreviousSelection ? Rect.Empty : _viewModel.Region;
 
-        var selection = await RegionSelectHelper.Select(mode, _viewModel.Region, _regionSelection.Monitor, quickSelection);
+        var selection = await RegionSelectHelper.Select(mode, previousRegion, _regionSelection.Monitor, quickSelection);
 
         ForceUpdate();
 

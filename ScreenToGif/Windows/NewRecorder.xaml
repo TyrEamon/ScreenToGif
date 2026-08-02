@@ -294,6 +294,7 @@
                         <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Scan}" Header="{DynamicResource S.Recorder.Area.Select}" Tag="S.Recorder.Area" ContentHeight="16" ContentWidth="16" Click="RegionButton_Click"/>
                         <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Window}" Header="{DynamicResource S.Recorder.Window.Select}" Tag="S.Recorder.Window" ContentHeight="16" ContentWidth="16" Click="WindowButton_Click"/>
                         <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Monitor}" Header="{DynamicResource S.Recorder.Screen.Select}" Tag="S.Recorder.Screen" ContentHeight="16" ContentWidth="16" Click="FullScreenButton_Click"/>
+                        <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Scan}" Header="{DynamicResource S.StartUp.RegionRecorder}" Tag="I" ContentHeight="16" ContentWidth="16" Click="QuickRegionButton_Click"/>
                     </n:SplitButton>
                 </Grid>
                 </Border>
@@ -412,6 +413,7 @@
                     <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Scan}" Header="{DynamicResource S.Recorder.Area}" ContentHeight="16" ContentWidth="16" Click="RegionButton_Click"/>
                     <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Window}" Header="{DynamicResource S.Recorder.Window}" ContentHeight="16" ContentWidth="16" Click="WindowButton_Click"/>
                     <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Monitor}" Header="{DynamicResource S.Recorder.Screen}" ContentHeight="16" ContentWidth="16" Click="FullScreenButton_Click"/>
+                    <n:ExtendedMenuItem Icon="{StaticResource Vector.Lucide.Scan}" Header="{DynamicResource S.StartUp.RegionRecorder}" Tag="I" ContentHeight="16" ContentWidth="16" Click="QuickRegionButton_Click"/>
                 </n:SplitButton>
 
                 <!--Discard-->

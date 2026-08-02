@@ -1194,41 +1194,6 @@ public class SelectControl : Control
                 Panel.SetZIndex(border, 0);
             }
         }
-        else
-        {
-            var viewBox = new Viewbox
-            {
-                Height = ActualHeight,
-                Width = ActualWidth,
-                Stretch = Stretch.Uniform,
-                StretchDirection = StretchDirection.Both,
-                Tag = "T",
-                ClipToBounds = true,
-                IsHitTestVisible = false,
-                Child = new TextPath
-                {
-                    IsHitTestVisible = false,
-                    Text = LocalizationHelper.Get("S.Recorder.SelectArea"),
-                    Fill = new SolidColorBrush(Color.FromArgb(200, 0, 0, 0)),
-                    Stroke = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255)),
-                    StrokeThickness = 3,
-                    FontFamily = (FontFamily)Application.Current.Resources["FontFamilyNormal"],
-                    FontSize = 80,
-                    FontWeight = FontWeights.SemiBold,
-                    Margin = new Thickness(80),
-                    VerticalAlignment = VerticalAlignment.Stretch,
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    ClipToBounds = true
-                }
-            };
-
-            _mainCanvas.Children.Insert(0, viewBox);
-
-            Canvas.SetLeft(viewBox, 0);
-            Canvas.SetTop(viewBox, 0);
-            Panel.SetZIndex(viewBox, 0);
-        }
-
         AdjustSelection();
 
         _ready = true;

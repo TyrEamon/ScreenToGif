@@ -63,7 +63,8 @@ public partial class App : IDisposable
         SetSecurityProtocol();
 
         //Parse arguments.
-        Arguments.Prepare(e.Args);
+        var startupArgs = AddExecutableArguments(e.Args);
+        Arguments.Prepare(startupArgs);
 
         LocalizationHelper.SelectCulture(UserSettings.All.LanguageCode);
         ThemeHelper.SelectTheme(UserSettings.All.MainTheme);
@@ -135,7 +136,7 @@ public partial class App : IDisposable
                                 Native.External.User32.SetForegroundWindow(handles.Count > 0 ? handles[0] : process.Handle);
                                 warning = false;
 
-                                InstanceSwitcherChannel.SendMessage(process.Id, e.Args);
+                                InstanceSwitcherChannel.SendMessage(process.Id, startupArgs);
                             }
                         }
 
@@ -208,10 +209,7 @@ public partial class App : IDisposable
 
         #region Startup
 
-        if (Arguments.Open)
-            MainViewModel.Open.Execute(Arguments.WindownToOpen, true);
-        else
-            MainViewModel.Open.Execute(UserSettings.All.StartUp);
+        OpenRequestedWindow();
 
         #endregion
     }
@@ -225,15 +223,35 @@ public partial class App : IDisposable
             if (args?.Length > 0)
                 Arguments.Prepare(args);
 
-            if (Arguments.Open)
-                MainViewModel.Open.Execute(Arguments.WindownToOpen, true);
-            else
-                MainViewModel.Open.Execute(UserSettings.All.StartUp);
+            OpenRequestedWindow();
         }
         catch (Exception e)
         {
             LogWriter.Log(e, "Unable to execute arguments from IPC.");
         }
+    }
+
+    private static string[] AddExecutableArguments(string[] args)
+    {
+        using var process = Process.GetCurrentProcess();
+
+        return process.ProcessName.Equals("ScreenToGif-QuickRegion", StringComparison.OrdinalIgnoreCase) ? args.Append("-quick-region").ToArray() : args;
+    }
+
+    private static void OpenRequestedWindow()
+    {
+        if (Arguments.QuickRegion)
+        {
+            if (MainViewModel.OpenRegionRecorder.CanExecute(null))
+                MainViewModel.OpenRegionRecorder.Execute(null);
+
+            return;
+        }
+
+        if (Arguments.Open)
+            MainViewModel.Open.Execute(Arguments.WindownToOpen, true);
+        else
+            MainViewModel.Open.Execute(UserSettings.All.StartUp);
     }
 
     private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
