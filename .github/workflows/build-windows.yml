@@ -36,32 +36,15 @@ jobs:
         shell: pwsh
         run: ./Other/GenerateQuickRegionIcon.ps1 -OutputPath QuickRegionLauncher/QuickRegion.ico
 
-      - name: Build quick region launcher
+      - name: Restore quick region launcher
+        run: dotnet restore QuickRegionLauncher/QuickRegionLauncher.csproj --runtime win-x64
+
+      - name: Publish quick region launcher
+        run: dotnet publish QuickRegionLauncher/QuickRegionLauncher.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore --output artifacts/QuickRegionLauncher
+
+      - name: Add quick region launcher
         shell: pwsh
-        run: |
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $visualStudio = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-          $vcvars = Join-Path $visualStudio "VC\Auxiliary\Build\vcvars64.bat"
-          $source = Join-Path $PWD "QuickRegionLauncher"
-          $output = Join-Path $PWD "artifacts\ScreenToGif-win-x64\ScreenToGif-QuickRegion.exe"
-          $buildScript = Join-Path $env:RUNNER_TEMP "build-quick-region.cmd"
-
-          @"
-          @call "$vcvars"
-          @if errorlevel 1 exit /b %errorlevel%
-          @cd /d "$source"
-          @rc.exe /nologo QuickRegion.rc
-          @if errorlevel 1 exit /b %errorlevel%
-          @cl.exe /nologo /O2 /EHsc /DUNICODE /D_UNICODE QuickRegion.cpp QuickRegion.res shell32.lib /link /SUBSYSTEM:WINDOWS /OUT:"$output"
-          "@ | Set-Content -LiteralPath $buildScript -Encoding ascii
-
-          & $buildScript
-
-          if ($LASTEXITCODE -ne 0) {
-            throw "Quick region launcher build failed with exit code $LASTEXITCODE."
-          }
-
-          Get-Item -LiteralPath $output
+        run: Copy-Item artifacts/QuickRegionLauncher/ScreenToGif-QuickRegion.exe artifacts/ScreenToGif-win-x64/ScreenToGif-QuickRegion.exe
 
       - name: Upload Windows package
         uses: actions/upload-artifact@v7
