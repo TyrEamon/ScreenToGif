@@ -128,84 +128,20 @@ internal class ApplicationViewModel : ApplicationBaseViewModel
         {
             return new RelayCommand
             {
-                CanExecutePredicate = o =>
-                {
-                    //True if all windows are not Recorders.
-                    return Application.Current?.Windows.OfType<Window>().All(a => !(a is BaseRecorder)) ?? false;
-                },
-                ExecuteAction = a =>
-                {
-                    var caller = a as Window;
-                    var editor = a as Editor;
+                CanExecutePredicate = CanOpenRecorder,
+                ExecuteAction = a => OpenScreenRecorder(a, false)
+            };
+        }
+    }
 
-                    if (editor == null)
-                        caller?.Hide();
-
-                    if (UserSettings.All.NewRecorder)
-                    {
-                        var recorderNew = new NewRecorder();
-                        recorderNew.Closed += (sender, args) =>
-                        {
-                            var window = sender as NewRecorder;
-
-                            if (window?.Project != null && window.Project.Any)
-                            {
-                                if (editor == null)
-                                {
-                                    ShowEditor(window.Project);
-                                    caller?.Close();
-                                }
-                                else
-                                    editor.RecorderCallback(window.Project);
-                            }
-                            else
-                            {
-                                if (editor == null)
-                                {
-                                    caller?.Show();
-                                    CloseOrNot();
-                                }
-                                else
-                                    editor.RecorderCallback(null);
-                            }
-                        };
-
-                        Application.Current.MainWindow = recorderNew;
-                        recorderNew.Show();
-
-                        return;
-                    }
-
-                    var recorder = new Recorder();
-                    recorder.Closed += (sender, args) =>
-                    {
-                        var window = sender as Recorder;
-
-                        if (window?.Project != null && window.Project.Any)
-                        {
-                            if (editor == null)
-                            {
-                                ShowEditor(window.Project);
-                                caller?.Close();
-                            }
-                            else
-                                editor.RecorderCallback(window.Project);
-                        }
-                        else
-                        {
-                            if (editor == null)
-                            {
-                                caller?.Show();
-                                CloseOrNot();
-                            }
-                            else
-                                editor.RecorderCallback(null);
-                        }
-                    };
-
-                    Application.Current.MainWindow = recorder;
-                    recorder.Show();
-                }
+    public ICommand OpenRegionRecorder
+    {
+        get
+        {
+            return new RelayCommand
+            {
+                CanExecutePredicate = CanOpenRecorder,
+                ExecuteAction = a => OpenScreenRecorder(a, true)
             };
         }
     }
@@ -540,6 +476,86 @@ internal class ApplicationViewModel : ApplicationBaseViewModel
     }
 
     #endregion
+
+    private bool CanOpenRecorder(object parameter)
+    {
+        //True if all windows are not Recorders.
+        return Application.Current?.Windows.OfType<Window>().All(a => !(a is BaseRecorder)) ?? false;
+    }
+
+    private void OpenScreenRecorder(object parameter, bool selectRegionOnLoad)
+    {
+        var caller = parameter as Window;
+        var editor = parameter as Editor;
+
+        if (editor == null)
+            caller?.Hide();
+
+        if (UserSettings.All.NewRecorder || selectRegionOnLoad)
+        {
+            var recorderNew = new NewRecorder(selectRegionOnLoad);
+            recorderNew.Closed += (sender, args) =>
+            {
+                var window = sender as NewRecorder;
+
+                if (window?.Project != null && window.Project.Any)
+                {
+                    if (editor == null)
+                    {
+                        ShowEditor(window.Project);
+                        caller?.Close();
+                    }
+                    else
+                        editor.RecorderCallback(window.Project);
+                }
+                else
+                {
+                    if (editor == null)
+                    {
+                        caller?.Show();
+                        CloseOrNot();
+                    }
+                    else
+                        editor.RecorderCallback(null);
+                }
+            };
+
+            Application.Current.MainWindow = recorderNew;
+            recorderNew.Show();
+
+            return;
+        }
+
+        var recorder = new Recorder();
+        recorder.Closed += (sender, args) =>
+        {
+            var window = sender as Recorder;
+
+            if (window?.Project != null && window.Project.Any)
+            {
+                if (editor == null)
+                {
+                    ShowEditor(window.Project);
+                    caller?.Close();
+                }
+                else
+                    editor.RecorderCallback(window.Project);
+            }
+            else
+            {
+                if (editor == null)
+                {
+                    caller?.Show();
+                    CloseOrNot();
+                }
+                else
+                    editor.RecorderCallback(null);
+            }
+        };
+
+        Application.Current.MainWindow = recorder;
+        recorder.Show();
+    }
 
     #region Methods
 
