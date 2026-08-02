@@ -63,7 +63,7 @@
                               ToolTip="{DynamicResource S.StartUp.Recorder.Tooltip}" ToolTipService.Placement="Bottom"/>
 
             <n:ExtendedButton Grid.Column="1" Text="{DynamicResource S.StartUp.RegionRecorder}" Margin="5,0,5,5" FontSize="13" Style="{StaticResource Style.Button.Vertical.Border}"
-                              Effect="{StaticResource Shadow.Border.Tiny}" ContentWidth="36" ContentHeight="36" Icon="{StaticResource Vector.Crop}"
+                              Effect="{StaticResource Shadow.Border.Tiny}" ContentWidth="36" ContentHeight="36" Icon="{StaticResource Vector.Lucide.Scan}"
                               Command="{Binding OpenRegionRecorder}" CommandParameter="{Binding ElementName=StartupWindow}"
                               ToolTip="{DynamicResource S.StartUp.RegionRecorder.Tooltip}" ToolTipService.Placement="Bottom"/>
 
