@@ -1,0 +1,3 @@
+#define IDI_QUICK_REGION 101
+
+IDI_QUICK_REGION ICON "QuickRegion.ico"
